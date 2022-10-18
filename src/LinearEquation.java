@@ -1,5 +1,3 @@
-import java.util.Formatter;
-
 public class LinearEquation {
     /* Instance Variables */
     private int x1;
@@ -35,7 +33,7 @@ public LinearEquation(int x1, int y1, int x2, int y2) {
     /* Calculates and returns the slope of the line between (x1, y1) and
        (x2, y2), rounded to the nearest hundredth */
     public double slope() {
-        return roundedToHundredth((y2 - y1)/(x2 - x1));
+        return roundedToHundredth((double) (y2 - y1)/(x2 - x1));
     }
 
     /* Returns a String that represents the linear equation of the line through points
@@ -68,6 +66,9 @@ public LinearEquation(int x1, int y1, int x2, int y2) {
 
     // calculate the middle part of the equation string
     private String mx() {
+        // calculate slope
+        double m = slope();
+
         // if the line is horizontal (y remains the same throughout), no mx value, return an empty string
         if (y1 == y2) {
             return "";
@@ -84,32 +85,56 @@ public LinearEquation(int x1, int y1, int x2, int y2) {
         }
 
         // if the slope is a whole number, return mx with a whole number slope
-        if ((int) ((double) deltaY / deltaX) == (double) deltaY / deltaX) {
-            return sign + (int) slope() + "x ";
+        if ((int) m == m) {
+            // if slope is 1 or -1, return no slope
+            if (Math.abs(m) == 1.0) {
+                return sign + "x ";
+            }
+            return (int) slope() + "x ";
         }
         // if the slope is a fraction, return mx with a fractional slope
-        return sign + deltaY + "/" + deltaX + "x ";
+        return sign + Math.abs(deltaY) + "/" + Math.abs(deltaX) + "x ";
     }
 
     private String b() {
+        // calculate y intercept
+        double b = yIntercept();
+
         // if line is horizontal, return b with no sign
         if (y1 == y2) {
-            return (int) yIntercept();
+            return Integer.toString((int) b);
         }
+
+        // if y intercept is zero, omit b, return an empty string
+        if (b == 0) {
+            return "";
+        }
+
+        // by default set sign to positive, if b is negative set sign to negative
+        String sign = "+ ";
+        if (isNeg(b)) {
+            sign = "- ";
+        }
+
+        // return the final part of the equation, including b and its sign
+        return sign + Math.abs(b);
     }
 
-    // returns whether num is negative
+    // returns whether num (an int) is negative
     private boolean isNeg(int num) {
+        return !(Math.abs(num) == num);
+    }
+
+    // returns whether num (a double) is negative
+    private boolean isNeg(double num) {
         return !(Math.abs(num) == num);
     }
 
     /* Returns a String of the coordinate point on the line that has the given x value, with
        both x and y coordinates as decimals to the nearest hundredth, e.g (-5.0, 6.75) */
-    public String coordinateForX(double xValue)
-
-
-
-
+    public String coordinateForX(double xValue) {
+        return toCoordinatePair(roundedToHundredth(xValue), roundedToHundredth(xValue * slope() + yIntercept()));
+    }
 
     /* "Helper" method for use elsewhere in your methods; returns the value toRound rounded
         to the nearest hundredth
@@ -117,9 +142,8 @@ public LinearEquation(int x1, int y1, int x2, int y2) {
         HINT:  the Math.round method can help with this!
      */
     public double roundedToHundredth(double toRound) {
-        return Math.round(100 * toRound) / 100;
+        return Math.round(100 * toRound) / 100.0;
     }
-
 
     /* Returns a string that includes all information about the linear equation, each on
        separate lines:
@@ -133,6 +157,20 @@ public LinearEquation(int x1, int y1, int x2, int y2) {
       equation(), slope(), yIntercept(), distance().
 
       */
-    public String lineInfo()
+    public String lineInfo() {
+        return "The two points are: " + toCoordinatePair(x1, y1) + " and " + toCoordinatePair(x2, y2) +
+                "\nThe equation of the line between these points is: " + equation() +
+                "\nThe slope of this line is: " + slope() +
+                "\nThe y-intercept of the line is: " + yIntercept() +
+                "\nThe distance between the two points is: " + distance();
+    }
 
+    // both return a string correlating to a coordinate pair from given x and y values
+    private String toCoordinatePair(int x, int y) {
+        return "(" + x + ", " + y + ")";
+    }
+
+    private String toCoordinatePair(double x, double y) {
+        return "(" + x + ", " + y + ")";
+    }
 }
