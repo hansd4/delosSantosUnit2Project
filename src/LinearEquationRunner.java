@@ -1,4 +1,3 @@
-import javax.sound.sampled.Line;
 import java.util.Scanner;
 
 public class LinearEquationRunner {
@@ -14,11 +13,11 @@ public class LinearEquationRunner {
         String pair2 = scan.nextLine();
         System.out.println();
 
-        // extract coordinates from coordinate pairs (FIX THIS AND YOU'RE DONE)
-        int x1 = Integer.parseInt(pair1.substring(1, 2));
-        int y1 = Integer.parseInt(pair1.substring(4, 5));
-        int x2 = Integer.parseInt(pair2.substring(1, 2));
-        int y2 = Integer.parseInt(pair2.substring(4, 5));
+        // extract coordinates from coordinate pairs
+        int x1 = Integer.parseInt(pair1.substring(1, pair1.indexOf(",")));
+        int y1 = Integer.parseInt(pair1.substring(pair1.indexOf(" ") + 1, pair1.length() - 1));
+        int x2 = Integer.parseInt(pair2.substring(1, pair2.indexOf(",")));
+        int y2 = Integer.parseInt(pair2.substring(pair2.indexOf(" ") + 1, pair2.length() - 1));
 
         // if line is vertical, inform user and end program
         if (x1 == x2) {
